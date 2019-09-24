@@ -1,46 +1,90 @@
 const routes = async (fastify, options) => {
+  fastify.route({
+    method: 'POST',
+    url: '/signin',
+    schema: {
+      body: {
+        required: ['email', 'password'],
+        properties: {
+          email: { type: 'string' },
+          password: { type: 'string' },
+        },
+      },
+    },
+    handler: async (req, res) => {
+      const { level, jwt } = fastify;
+      const { email, password } = req.body;
 
-    fastify.route({
-        method: 'GET',
-        url: '/test',
-        preHandler: fastify.auth([
-            fastify.verifyJWT,
-            fastify.verifyUser
-        ]),
-        handler: (req, reply) => {
-            req.log.info('Auth route')
-            reply.send({ hello: 'world' })
+
+      try {
+        const user = await level.get(`user:${email}`);
+
+
+        if (user.password !== password) {
+          return res.code(401);
         }
-        })
 
-    fastify.route({
-        method: 'POST',
-        url: '/signin',
-        preHandler: fastify.auth([
-            fastify.verifyJWT,
-            fastify.verifyUser
-        ]),
-        handler: (req, reply) => {
-            req.log.info('Auth route')
-            reply.send({ hello: 'world' })
+        const token = jwt.sign({
+          email,
+          name: user.name,
+          roles: user.roles,
+        });
+        res.send({
+          token,
+        });
+      } catch (err) {
+        switch (err.type) {
+          case 'NotFoundError':
+            return res.code(401);
+          default:
+            return res.code(500);
         }
-        })
+      }
+    },
+  });
 
-    fastify.route({
-        method: 'POST',
-        url: '/signup',
-        handler: async (req, res) => {
-            const { level, jwt } = fastify;
-            const { user, password } = req.body;
-            await level.put(`user:${user}`, password)
+  fastify.route({
+    method: 'POST',
+    url: '/signup',
+    schema: {
+      body: {
+        type: 'object',
+        required: ['password', 'email', 'name'],
+        properties: {
+          password: { type: 'string' },
+          email: { type: 'string' },
+          name: { type: 'string' },
+        },
+      },
+      response: {
+        200: {
+          type: 'object',
+          properties: {
+            token: { type: 'string' },
+          },
+        },
+      },
+    },
+    handler: async (req, res) => {
+      const { level, jwt } = fastify;
+      const { email, password, name } = req.body;
+      const roles = ['admin'];
+      await level.put(`user:${email}`, {
+        password,
+        email,
+        name,
+        roles,
+      });
 
-            res.send({
-                token: jwt.sign({
-                    user
-                })
-            })
-        }
-        })
-}
+      res.send({
+        token: jwt.sign({
+          email,
+          name,
+          roles,
+        }),
+      });
+    },
+  });
+};
 
 module.exports = routes;

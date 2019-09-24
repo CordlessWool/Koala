@@ -8,8 +8,9 @@
   },
   "scripts": {
     "test": "tap test/**/*.test.js",
-    "start": "node app.js",
-    "dev": "nodemon app.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "debug": "nodemon --nolazy --inspect=5959 server.js"
   },
   "keywords": [],
   "author": "",
