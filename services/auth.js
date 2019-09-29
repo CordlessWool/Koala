@@ -1,3 +1,5 @@
+const { encryptPassword, isPasswordValid } = require('../utils/crypter');
+
 const routes = async (fastify, options) => {
   fastify.route({
     method: 'POST',
@@ -20,7 +22,7 @@ const routes = async (fastify, options) => {
         const user = await level.get(`user:${email}`);
 
 
-        if (user.password !== password) {
+        if (isPasswordValid(password, user.password)) {
           return res.code(401);
         }
 
@@ -69,8 +71,9 @@ const routes = async (fastify, options) => {
       const { level, jwt } = fastify;
       const { email, password, name } = req.body;
       const roles = ['admin'];
+      const enrypted = await encryptPassword(password);
       await level.put(`user:${email}`, {
-        password,
+        password: enrypted,
         email,
         name,
         roles,
