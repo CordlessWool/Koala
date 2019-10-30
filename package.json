@@ -27,7 +27,7 @@
     "minio": "^7.0.12"
   },
   "devDependencies": {
-    "tap": "^14.6.7",
+    "tap": "^14.9.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint": "^6.4.0"
