@@ -17,7 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "fastify": "^2.0.0",
-    "fastify-auth": "^0.6.0",
+    "fastify-auth": "^0.7.0",
     "fastify-autoload": "^1.0.0",
     "fastify-cli": "^1.2.0",
     "fastify-jwt": "^1.0.0",
