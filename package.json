@@ -24,7 +24,7 @@
     "fastify-leveldb": "^2.1.0",
     "fastify-plugin": "^1.5.0",
     "fastify-sequelize": "^1.0.4",
-    "minio": "^7.0.12"
+    "minio": "^7.0.15"
   },
   "devDependencies": {
     "tap": "^14.6.7",
