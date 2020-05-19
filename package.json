@@ -20,7 +20,7 @@
     "fastify-auth": "^0.7.0",
     "fastify-autoload": "^1.0.0",
     "fastify-cli": "^1.2.0",
-    "fastify-jwt": "^1.0.0",
+    "fastify-jwt": "^1.4.0",
     "fastify-leveldb": "^2.1.0",
     "fastify-plugin": "^1.5.0",
     "fastify-sequelize": "^1.0.4",
